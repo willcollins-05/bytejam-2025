@@ -17,6 +17,7 @@ export default function SceneBuilder() {
     CanvasItems | AvailableItems | null
   >(null);
   const [expandedGroup, setExpandedGroup] = useState<number | null>(null);
+  const [scale, setScale] = useState<number | null>(null);
 
   let mouseMoved: boolean = false;
 
@@ -175,6 +176,23 @@ export default function SceneBuilder() {
     setSelectedId(null);
   };
 
+  const updateScale = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newScale = parseFloat(e.target.value);
+    if (selectedId && !isNaN(newScale) && newScale > 0) {
+      if (newScale > 10) {
+        newScale = 10;
+      }
+      if (newScale < 0.1) {
+        newScale = 0.1;
+      }
+      setCanvasItems((prev) =>
+        prev.map((item) =>
+          item.uniqueId === selectedId ? { ...item, scale: newScale } : item
+        )
+      );
+    }
+  };
+
   const toggleGroup = (groupId: number) => {
     setExpandedGroup(expandedGroup === groupId ? null : groupId);
   };
@@ -182,7 +200,7 @@ export default function SceneBuilder() {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <SceneSidebar 
+      <SceneSidebar
         groups={groups}
         expandedGroup={expandedGroup}
         toggleGroup={toggleGroup}
@@ -199,6 +217,10 @@ export default function SceneBuilder() {
           selectedId={selectedId}
           deleteItem={deleteItem}
           clearCanvas={clearCanvas}
+          updateScale={updateScale}
+          selectedScale={
+            canvasItems.find((item) => item.uniqueId === selectedId)?.scale || 1
+          }
         />
 
         <SceneCanvas
