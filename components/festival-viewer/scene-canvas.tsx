@@ -1,4 +1,4 @@
-import { AvailableItems, CanvasItems } from '@/types/festival-viewer-types';
+import { CanvasItems } from '@/types/festival-viewer-types';
 
 export default function SceneCanvas(props: {
     handleCanvasDragOver: (e: React.DragEvent) => void;

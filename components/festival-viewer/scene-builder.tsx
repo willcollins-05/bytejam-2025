@@ -1,8 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Trash2, RotateCw } from "lucide-react";
-import { AvailableItems, CanvasItems } from "@/types/festival-viewer-types";
+
+import {
+  AvailableItems,
+  CanvasItems,
+  ItemGroup,
+} from "@/types/festival-viewer-types";
 import SceneCanvas from "./scene-canvas";
+import SceneToolbar from "./scene-toolbar";
+import SceneSidebar from "./scene-sidebar";
 
 export default function SceneBuilder() {
   const [canvasItems, setCanvasItems] = useState<CanvasItems[]>([]);
@@ -10,18 +16,65 @@ export default function SceneBuilder() {
   const [draggedItem, setDraggedItem] = useState<
     CanvasItems | AvailableItems | null
   >(null);
+  const [expandedGroup, setExpandedGroup] = useState<number | null>(null);
 
   let mouseMoved: boolean = false;
 
-  // Available images/emojis to drag
-  const availableItems: AvailableItems[] = [
+  // Will be changed to the Supabase database once set up
+  const groups: ItemGroup[] = [
     {
-      group: "chineseNewYear",
-      id: "chineseNewYear",
-      imagePath: "/images/chineseNewYear/paper-lantern.webp",
-      label: "Lantern",
-      recommendedSizeX: 90,
-      recommendedSizeY: 90,
+      id: 1,
+      groupName: "Chinese New Year",
+      items: [
+        {
+          id: 1,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern 2",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+        {
+          id: 2,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+        {
+          id: 3,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern 3",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+      ],
+    },
+    {
+      id: 2,
+      groupName: "Chinese New Year 2",
+      items: [
+        {
+          id: 1,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern 2",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+        {
+          id: 2,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+        {
+          id: 3,
+          imagePath: "/images/chineseNewYear/paper-lantern.webp",
+          label: "Chinese Lantern 3",
+          recommendedSizeX: 60,
+          recommendedSizeY: 60,
+        },
+      ],
     },
   ];
 
@@ -122,62 +175,32 @@ export default function SceneBuilder() {
     setSelectedId(null);
   };
 
+  const toggleGroup = (groupId: number) => {
+    setExpandedGroup(expandedGroup === groupId ? null : groupId);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg p-4 overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Items</h2>
-        <div className="space-y-2">
-          {availableItems.map((item) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, item)}
-              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-move hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-blue-300"
-            >
-              <img
-                src={item.imagePath}
-                alt={item.label}
-                className="w-12 h-12 object-contain"
-                draggable="false"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <SceneSidebar 
+        groups={groups}
+        expandedGroup={expandedGroup}
+        toggleGroup={toggleGroup}
+        handleDragStart={handleDragStart}
+        handleCanvasDragOver={handleCanvasDragOver}
+        handleCanvasDrop={handleCanvasDrop}
+      />
 
       {/* Main Canvas Area */}
       <div className="flex-1 flex flex-col">
         {/* Toolbar */}
-        <div className="bg-white shadow-md p-4 flex gap-2 items-center">
-          <button
-            onClick={rotateItem}
-            disabled={!selectedId}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-          >
-            <RotateCw size={18} />
-            Rotate
-          </button>
-          <button
-            onClick={deleteItem}
-            disabled={!selectedId}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-          >
-            <Trash2 size={18} />
-            Delete
-          </button>
-          <button
-            onClick={clearCanvas}
-            className="ml-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-          >
-            Clear All
-          </button>
-        </div>
+        <SceneToolbar
+          rotateItem={rotateItem}
+          selectedId={selectedId}
+          deleteItem={deleteItem}
+          clearCanvas={clearCanvas}
+        />
 
-        {/* Canvas */}
         <SceneCanvas
           handleCanvasDragOver={handleCanvasDragOver}
           handleCanvasDrop={handleCanvasDrop}
