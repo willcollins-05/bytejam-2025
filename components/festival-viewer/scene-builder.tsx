@@ -6,78 +6,81 @@ import {
   CanvasItems,
   ItemGroup,
 } from "@/types/festival-viewer-types";
+
 import SceneCanvas from "./scene-canvas";
 import SceneToolbar from "./scene-toolbar";
 import SceneSidebar from "./scene-sidebar";
 
-export default function SceneBuilder() {
+export default function SceneBuilder(props: { itemGroups: ItemGroup[] }) {
   const [canvasItems, setCanvasItems] = useState<CanvasItems[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [draggedItem, setDraggedItem] = useState<
     CanvasItems | AvailableItems | null
   >(null);
   const [expandedGroup, setExpandedGroup] = useState<number | null>(null);
-  const [scale, setScale] = useState<number | null>(null);
 
   let mouseMoved: boolean = false;
 
   // Will be changed to the Supabase database once set up
-  const groups: ItemGroup[] = [
-    {
-      id: 1,
-      groupName: "Chinese New Year",
-      items: [
-        {
-          id: 1,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern 2",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-        {
-          id: 2,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-        {
-          id: 3,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern 3",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-      ],
-    },
-    {
-      id: 2,
-      groupName: "Chinese New Year 2",
-      items: [
-        {
-          id: 1,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern 2",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-        {
-          id: 2,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-        {
-          id: 3,
-          imagePath: "/images/chineseNewYear/paper-lantern.webp",
-          label: "Chinese Lantern 3",
-          recommendedSizeX: 60,
-          recommendedSizeY: 60,
-        },
-      ],
-    },
-  ];
+  const groups: ItemGroup[] = props.itemGroups;
+
+  
+  // const groups: ItemGroup[] = [
+  //   {
+  //     id: 1,
+  //     groupName: "Chinese New Year",
+  //     items: [
+  //       {
+  //         id: 1,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern 2",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //       {
+  //         id: 2,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //       {
+  //         id: 3,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern 3",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     groupName: "Chinese New Year 2",
+  //     items: [
+  //       {
+  //         id: 1,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern 2",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //       {
+  //         id: 2,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //       {
+  //         id: 3,
+  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
+  //         label: "Chinese Lantern 3",
+  //         recommendedSizeX: 60,
+  //         recommendedSizeY: 60,
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const handleDragStart = (
     e: React.DragEvent,
