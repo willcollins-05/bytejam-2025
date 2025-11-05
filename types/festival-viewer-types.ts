@@ -1,6 +1,5 @@
 export interface AvailableItems {
-    group: string;
-    id: string;
+    id: number;
     imagePath: string;
     label: string;
     recommendedSizeX?: number;  // Size suggestions for the canvas
@@ -13,4 +12,10 @@ export interface CanvasItems extends AvailableItems {
     y: number;
     rotation: number;
     scale: number;
+}
+
+export interface ItemGroup {
+    id: number;
+    groupName: string;
+    items: AvailableItems[];
 }
