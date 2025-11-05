@@ -58,9 +58,11 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import Link from "next/link";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
+import{ DisplayClerk } from "@/components/clerk";
 
 export default function Home() {
   return (
+    
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Navigation */}
       <nav className="bg-white dark:bg-gray-800 shadow-sm">
@@ -96,7 +98,7 @@ export default function Home() {
             </div>
             <div className="w-full md:w-1/2 max-w-md">
               <h2 className="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl text-center">
-                <LoginForm />
+                <DisplayClerk />
               </h2>
             </div>
           </div>
