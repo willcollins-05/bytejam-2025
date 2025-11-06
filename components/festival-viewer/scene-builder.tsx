@@ -1,86 +1,87 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   AvailableItems,
   CanvasItems,
   ItemGroup,
 } from "@/types/festival-viewer-types";
+import {
+  createNewFestival,
+  updateFestivalPlacedProps,
+  getFestivalById
+} from "@/lib/supabase/queries";
+import { useSession } from "next-auth/react";
 
 import SceneCanvas from "./scene-canvas";
 import SceneToolbar from "./scene-toolbar";
 import SceneSidebar from "./scene-sidebar";
 
-export default function SceneBuilder(props: { itemGroups: ItemGroup[] }) {
+export default function SceneBuilder(props: {
+  itemGroups: ItemGroup[];
+  isNew: boolean;
+  id: number;
+}) {
+  const { data: session, status } = useSession();
+
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [canvasItems, setCanvasItems] = useState<CanvasItems[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [draggedItem, setDraggedItem] = useState<
     CanvasItems | AvailableItems | null
   >(null);
   const [expandedGroup, setExpandedGroup] = useState<number | null>(null);
-
+  const [festivalName, setFestivalName] = useState<string>(
+    `${session?.user.name}'s Festival`
+  );
   let mouseMoved: boolean = false;
+
+  useEffect(() => {
+    setFestivalName(`${session?.user.name}'s Festival`);
+  }, [session, status]);
+
+  if (!isLoggedIn && session?.user.id !== null && status === "authenticated") {
+    setIsLoggedIn(true);
+  }
+ 
+  useEffect(() => {
+    const loadFestivalById = async () => {
+      const festivalData = await getFestivalById(props.id)
+      setFestivalName(festivalData.name);
+      console.log(festivalData);
+      setCanvasItems(festivalData.placed_props_json);
+    }
+
+    if (props.id !== -1 && props.id !== null) {
+      loadFestivalById()
+    }
+    
+  }, [])
+
+ 
 
   // Will be changed to the Supabase database once set up
   const groups: ItemGroup[] = props.itemGroups;
 
-  
-  // const groups: ItemGroup[] = [
-  //   {
-  //     id: 1,
-  //     groupName: "Chinese New Year",
-  //     items: [
-  //       {
-  //         id: 1,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern 2",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //       {
-  //         id: 2,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //       {
-  //         id: 3,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern 3",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     groupName: "Chinese New Year 2",
-  //     items: [
-  //       {
-  //         id: 1,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern 2",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //       {
-  //         id: 2,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //       {
-  //         id: 3,
-  //         imagePath: "/images/chineseNewYear/paper-lantern.webp",
-  //         label: "Chinese Lantern 3",
-  //         recommendedSizeX: 60,
-  //         recommendedSizeY: 60,
-  //       },
-  //     ],
-  //   },
-  // ];
+  const handleOnSave = async () => {
+    if (props.isNew) {
+      // Create festival on save
+      const response = await createNewFestival(
+        festivalName,
+        Number(session?.user.id),
+        canvasItems
+      );
+      console.log(response);
+    } else {
+      // Update festival
+      const response = await updateFestivalPlacedProps(
+        props.id ? props.id : -1,
+        canvasItems
+      );
+      console.log(props.id);
+      console.log(response);
+    }
+  };
 
   const handleDragStart = (
     e: React.DragEvent,
@@ -200,6 +201,12 @@ export default function SceneBuilder(props: { itemGroups: ItemGroup[] }) {
     setExpandedGroup(expandedGroup === groupId ? null : groupId);
   };
 
+
+
+  if (!isLoggedIn) {
+    return <h1>You must log in to continue</h1>;
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -224,6 +231,9 @@ export default function SceneBuilder(props: { itemGroups: ItemGroup[] }) {
           selectedScale={
             canvasItems.find((item) => item.uniqueId === selectedId)?.scale || 1
           }
+          handleOnSave={handleOnSave}
+          setFestivalName={setFestivalName}
+          festivalName={festivalName}
         />
 
         <SceneCanvas

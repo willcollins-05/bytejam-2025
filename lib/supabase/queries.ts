@@ -7,6 +7,7 @@ import {
   prop_groups,
   placed_props,
 } from "@/types/database-types";
+import { ItemGroup, CanvasItems } from "@/types/festival-viewer-types";
 
 async function getAuthenticatedClient() {
   const supabase = await createClient();
@@ -28,14 +29,14 @@ export const getUserById = async (userId: number) => {
     .from("users")
     .select("*")
     .eq("id", userId)
-    .limit(1)
+    .limit(1);
 
   if (error) {
     throw new Error(`Error fetching user: ${error.message}`);
   }
 
   if (!data || (Array.isArray(data) && data.length == 0)) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 
   const row = Array.isArray(data) ? data[0] : data;
@@ -58,14 +59,14 @@ export const getUserByUsername = async (username: string) => {
     .from("users")
     .select("*")
     .eq("username", username)
-    .limit(1)
+    .limit(1);
 
   if (error) {
     throw new Error("Error fetching user: " + error.message);
   }
 
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 
   const row = Array.isArray(data) ? data[0] : data;
@@ -88,28 +89,28 @@ export const getUserByEmail = async (email: string) => {
     .from("users")
     .select("*")
     .eq("email", email)
-    .limit(1)
+    .limit(1);
 
-    if (error) {
-        throw new Error("Error fetching user: " + error.message);
-    }
-    
-    if (!data || (Array.isArray(data) && data.length === 0)) {
-        throw new Error('User not found');
-    }
+  if (error) {
+    throw new Error("Error fetching user: " + error.message);
+  }
 
-    const row = Array.isArray(data) ? data[0] : data;
+  if (!data || (Array.isArray(data) && data.length === 0)) {
+    throw new Error("User not found");
+  }
 
-    const user: users = {
-        id: row.id,
-        created_at: row.created_at,
-        username: row.username,
-        email: row.email,
-        password_hash: row.password_hash,
-        pfp_url: row.pfp_url,
-    };
+  const row = Array.isArray(data) ? data[0] : data;
 
-    return user;
+  const user: users = {
+    id: row.id,
+    created_at: row.created_at,
+    username: row.username,
+    email: row.email,
+    password_hash: row.password_hash,
+    pfp_url: row.pfp_url,
+  };
+
+  return user;
 };
 
 export const createNewUser = async (newUser: users) => {
@@ -118,13 +119,13 @@ export const createNewUser = async (newUser: users) => {
     .from("users")
     .insert([newUser])
     .select()
-    .limit(1)
+    .limit(1);
 
   if (error) {
     throw new Error("Error creating user: " + error.message);
   }
 
-  return Array.isArray(data) ? (data[0] as users): (data as users);
+  return Array.isArray(data) ? (data[0] as users) : (data as users);
 };
 
 export const getAllProps = async () => {
@@ -197,4 +198,116 @@ export const getAllPropGroups = async () => {
   });
 
   return propGroups;
+};
+
+export const getAllFestivals = async () => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase
+    .from("festivals")
+    .select("*")
+    .limit(100);
+  if (error) {
+    throw new Error("Error fetching all festivals: " + error);
+  }
+
+  const festivals: festivals[] = [];
+
+  if (Array.isArray(data)) {
+    data.map((festival: any) => {
+      festivals.push({
+        id: festival.id,
+        created_at: festival.created_at,
+        user_id: festival.user_id,
+        placed_props_json: festival.placed_props,
+        name: festival.name,
+      });
+    });
+  }
+
+  return festivals;
+};
+
+export const getFestivalById = async (id: number) => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase
+    .from("festivals")
+    .select("*")
+    .eq("id", id as number)
+    .limit(1);
+
+  if (error) {
+    console.log(error)
+    throw new Error("Error fetching all festivals: ");
+  }
+
+  const row = Array.isArray(data) ? data[0] : data;
+
+  const festival: festivals = {
+    name: row.name,
+    id: row.id,
+    created_at: row.created_at,
+    user_id: row.user_id,
+    placed_props_json: row.placed_props,
+  };
+
+  return festival;
+};
+export const getFestivalsByUserId = async (user_id: number) => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase
+    .from("festivals")
+    .select("*")
+    .eq("user_id", user_id)
+    .limit(1);
+  if (error) {
+    throw new Error("Error fetching all festivals: " + error);
+  }
+
+  const festivals: festivals[] = [];
+
+  if (Array.isArray(data)) {
+    data.map((festival: any) => {
+      festivals.push({
+        id: festival.id,
+        created_at: festival.created_at,
+        user_id: festival.user_id,
+        placed_props_json: festival.placed_props,
+      });
+    });
+  }
+
+  return festivals;
+};
+
+export const updateFestivalPlacedProps = async (
+  festival_id: number,
+  placed_props: CanvasItems[]
+) => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase
+    .from("festivals")
+    .update({ placed_props: placed_props })
+    .eq("id", festival_id)
+    .select();
+
+  if (error) {
+    console.error("Error updating festival: ", error);
+    return null;
+  }
+};
+
+export const createNewFestival = async (
+  name: string,
+  user_id: number,
+  placed_props: CanvasItems[]
+) => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase
+    .from("festivals")
+    .insert({ name: name, user_id: user_id, placed_props: placed_props })
+    .select();
+
+  if (error) {
+    console.error("Error creating new festival: ", error);
+  }
 };

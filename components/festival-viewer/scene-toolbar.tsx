@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import type { ChangeEvent } from "react";
-import { Trash2, RotateCw } from "lucide-react";
-import { useSession } from 'next-auth/react'
+import { Trash2, RotateCw, Save } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const ThemeSwitcher = dynamic(
   () => import("@/components/theme-switcher").then((mod) => mod.ThemeSwitcher),
@@ -15,6 +15,9 @@ export default function SceneToolbar(props: {
   clearCanvas: () => void;
   updateScale: (e: ChangeEvent<HTMLInputElement>) => void;
   selectedScale: number;
+  handleOnSave: (e: any) => void;
+  setFestivalName: (e: any) => void;
+  festivalName: string
 }) {
   const { data: session, status } = useSession();
 
@@ -36,7 +39,12 @@ export default function SceneToolbar(props: {
         <Trash2 size={18} />
         Delete
       </button>
-      <label htmlFor="scale" className="font-semibold text-gray-700 dark:text-white">Scale: </label>
+      <label
+        htmlFor="scale"
+        className="font-semibold text-gray-700 dark:text-white"
+      >
+        Scale:{" "}
+      </label>
       <input
         type="number"
         name="scale"
@@ -51,8 +59,26 @@ export default function SceneToolbar(props: {
         onChange={props.updateScale}
       />
       <button
+        className="ml-auto p-2 rounded-md bg-green-500 hover:bg-green-600 transition-colors"
+        onClick={props.handleOnSave}
+      >
+        <Save className="" />
+      </button>
+
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder='Festival Name...'
+        className="w-64 px-4 py-2 border rounded-lg bg-gray-100 outline-none text-gray-900"
+        autoComplete='off'
+        onChange={e => props.setFestivalName(e.target.value)}
+        value={props.festivalName}
+      />
+
+      <button
         onClick={props.clearCanvas}
-        className="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
       >
         Clear All
       </button>
