@@ -128,6 +128,30 @@ export const createNewUser = async (newUser: users) => {
   return Array.isArray(data) ? (data[0] as users) : (data as users);
 };
 
+export const getAllUsers = async () => {
+  const supabase = await getAuthenticatedClient();
+  const { data, error } = await supabase.from("users").select("*");
+
+  if (error) {
+    throw new Error("Error fetching props: " + error.message);
+  }
+
+  const users: users[] = [];
+
+  data.map((user: any) =>
+    users.push({
+      username: user.username,
+      id: user.id,
+      password_hash: user.password_hash,
+      email: user.email,
+      created_at: user.created_at,
+      pfp_url: user.pfp_url,
+    })
+  );
+
+  return users;
+}
+
 export const getAllProps = async () => {
   const supabase = await getAuthenticatedClient();
   const { data, error } = await supabase.from("festival_props").select("*");
@@ -272,6 +296,7 @@ export const getFestivalsByUserId = async (user_id: number) => {
         created_at: festival.created_at,
         user_id: festival.user_id,
         placed_props_json: festival.placed_props,
+        name: festival.name
       });
     });
   }
