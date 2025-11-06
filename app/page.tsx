@@ -93,7 +93,7 @@ export default function Home() {
               />
             </div>
             <div className="w-full md:w-1/2 max-w-md">
-            <Link href="components\login-form.tsx">
+            <Link href="auth\login">
                 <button className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold" >
                   Sign Up/Login
                 </button>
