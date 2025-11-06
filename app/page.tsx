@@ -55,7 +55,6 @@
 
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import Link from "next/link";
-import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
 
 export default function Home() {
@@ -66,11 +65,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between h-20">
             <div className="flex items-center">
-              <Link href="/" className="flex-shrink-0 flex items-center">
+              <div className="flex-shrink-0 flex items-center">
                 <span className="text-3xl font-bold text-gray-900 dark:text-indigo-400">
                   ByteJam Festival Builder
                 </span>
-              </Link>
+              </div>
             </div>
             <div className="flex items-center space-x-6">
               <ThemeSwitcher />
@@ -87,16 +86,18 @@ export default function Home() {
             <div className="w-full md:w-1/2 flex justify-center">
               <Image
                 src="/images/festival-logo-new.png"
-                width={600}
-                height={600}
-                alt="ByteJam Logo"
+                width={800}
+                height={800}
+                alt="Festival Logo"
                 className="rounded-lg"
               />
             </div>
             <div className="w-full md:w-1/2 max-w-md">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl text-center">
-                <LoginForm />
-              </h2>
+            <Link href="components\login-form.tsx">
+                <button className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold" >
+                  Sign Up/Login
+                </button>
+            </Link>
             </div>
           </div>
         </div>
