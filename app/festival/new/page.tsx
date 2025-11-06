@@ -14,12 +14,12 @@ export default async function FestivalViewPage() {
   const itemGroups: ItemGroup[] = [];
   const dbGroups: prop_groups[] = await getAllPropGroups();
   for (const group of dbGroups) {
-    const propsInGroup: festival_props[] = await getAllPropsFromGroup(group.id);
+    const propsInGroup: festival_props[] = await getAllPropsFromGroup(group.id as number);
     const itemGroup: ItemGroup = {
-      id: group.id,
+      id: group.id as number,
       groupName: group.group_name,
       items: propsInGroup.map((prop) => ({
-        id: prop.id,
+        id: prop.id as number,
         imagePath: prop.image_path,
         label: prop.label,
         recommendedSizeX: prop.recommended_size_x,
@@ -29,5 +29,5 @@ export default async function FestivalViewPage() {
     itemGroups.push(itemGroup);
   }
 
-  return <SceneBuilder itemGroups={itemGroups} />;
+  return <SceneBuilder itemGroups={itemGroups} isNew={true} id={-1} />;
 }
