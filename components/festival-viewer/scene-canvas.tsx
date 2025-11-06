@@ -1,5 +1,6 @@
 import { CanvasItems } from '@/types/festival-viewer-types';
 
+
 export default function SceneCanvas(props: {
     handleCanvasDragOver: (e: React.DragEvent) => void;
     handleCanvasDrop: (e: React.DragEvent) => void;
@@ -11,7 +12,7 @@ export default function SceneCanvas(props: {
 }) {
     return (
         <div
-            className="w-full h-full bg-white shadow-inner relative overflow-hidden"
+            className="w-full h-full bg-white dark:bg-gray-800 shadow-inner relative overflow-hidden"
             onDragOver={props.handleCanvasDragOver}
             onDrop={props.handleCanvasDrop}
             onClick={() => props.setSelectedId(null)}
