@@ -1,110 +1,150 @@
 "use client";
-
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { users } from "@/types/database-types";
+import { hashPassword, comparePasswords } from "@/lib/auth/session";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+  createNewUser,
+  getUserByEmail,
+  getUserByUsername,
+} from "@/lib/supabase/queries";
+import { signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation'
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export function LoginForm() {
   const router = useRouter();
+  const [isSignIn, setIsSignIn] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const addErrorMessage = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
     setIsLoading(true);
-    setError(null);
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+    if (isSignIn) {
+      try {
+        const result = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          addErrorMessage('Invalid email or password.');
+        } else {
+          router.push('/festival-view');
+          router.refresh();
+        }
+      } catch (error) {
+        addErrorMessage("Invalid email or password.");
+        console.log(error);
+      }
+    } else {
+      try {
+        const usernameQuery = await getUserByUsername(username);
+        if (usernameQuery.username == username) {
+          addErrorMessage("Username already taken.");
+          return;
+        }
+        const emailQuery = await getUserByEmail(email);
+        if (emailQuery.email == email) {
+          addErrorMessage("Email already in use.");
+          return;
+        }
+
+        const newUser: users = {
+          username: username,
+          email: email,
+          password_hash: await hashPassword(password),
+          created_at: new Date().toISOString(),
+          pfp_url: null,
+        };
+
+        await createNewUser(newUser);
+
+        const result = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          addErrorMessage('Invalid email or password.');
+        } else {
+          router.push('/festival-view');
+          router.refresh();
+        }
+      } catch (error) {
+        addErrorMessage("Error creating user.");
+        console.log(error);
+      }
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/auth/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Login"}
-              </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="underline underline-offset-4"
-              >
-                Sign up
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+    <div>
+      <form onSubmit={handleSubmit}>
+        {isSignIn ? <h2>Sign In</h2> : <h2>Sign Up</h2>}
+        {errorMessage.length > 0 && (
+          <p style={{ color: "red" }}>{errorMessage}</p>
+        )}
+        <div>
+          {!isSignIn && (
+            <>
+              <label htmlFor="username">Username: </label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Username..."
+                autoComplete="off"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </>
+          )}
+        </div>
+        <div>
+          <label htmlFor="email">Email: </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email..."
+            autoComplete="off"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password: </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password..."
+            autoComplete="off"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit">{isSignIn ? "Sign In" : "Sign Up"}</button>
+        <p>
+          {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button type="button" onClick={() => setIsSignIn(!isSignIn)}>
+            {isSignIn ? "Sign Up" : "Sign In"}
+          </button>
+        </p>
+      </form>
     </div>
   );
 }

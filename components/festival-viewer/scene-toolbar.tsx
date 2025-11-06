@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import type { ChangeEvent } from "react";
 import { Trash2, RotateCw } from "lucide-react";
+import { useSession } from 'next-auth/react'
 
 const ThemeSwitcher = dynamic(
   () => import("@/components/theme-switcher").then((mod) => mod.ThemeSwitcher),
@@ -15,6 +16,8 @@ export default function SceneToolbar(props: {
   updateScale: (e: ChangeEvent<HTMLInputElement>) => void;
   selectedScale: number;
 }) {
+  const { data: session, status } = useSession();
+
   return (
     <div className="bg-white dark:bg-gray-900 shadow-md p-4 flex gap-2 items-center border-b-4 border-gray-200 dark:border-gray-700">
       <button
