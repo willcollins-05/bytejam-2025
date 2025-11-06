@@ -11,7 +11,7 @@ export default function SceneCanvas(props: {
 }) {
     return (
         <div
-            className="w-full h-full bg-white rounded-lg shadow-inner relative overflow-hidden"
+            className="w-full h-full bg-white shadow-inner relative overflow-hidden"
             onDragOver={props.handleCanvasDragOver}
             onDrop={props.handleCanvasDrop}
             onClick={() => props.setSelectedId(null)}
@@ -28,7 +28,7 @@ export default function SceneCanvas(props: {
                 onMouseDown={(e) => props.handleItemMouseDown(e, item)}
                 onClick={(e) => props.onClick(e, item)}
                 className={`absolute cursor-move select-none ${
-                  props.selectedId === item.uniqueId ? 'ring-4 ring-blue-400' : ''
+                  props.selectedId === item.uniqueId ? 'ring-[3px] ring-blue-400 rounded-md' : ''
                 }`}
                 style={{
                   left: `${item.x}px`,

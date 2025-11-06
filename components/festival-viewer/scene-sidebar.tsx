@@ -13,13 +13,13 @@ export default function SceneSidebar(props: {
 
 }) {
   return (
-    <div className="w-64 bg-white shadow-lg p-4 overflow-y-auto">
+    <div className="w-64 bg-white shadow-lg p-4 overflow-y-auto border-r-4 border-gray-200">
       <h2 className="text-xl font-bold mb-4 text-gray-800">Items</h2>
       <div className="space-y-2">
         {props.groups.map((group) => (
           <div
             key={group.id}
-            className="flex flex-col items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-move transition-colors border-2 border-transparent"
+            className="flex flex-col items-center gap-3 p-3 bg-gray-50 hover:border-gray-200 rounded-lg cursor-move transition-colors border-2 border-transparent"
           >
             <button
               onClick={() => props.toggleGroup(group.id)}
@@ -52,7 +52,7 @@ export default function SceneSidebar(props: {
                       key={item.id}
                       draggable
                       onDragStart={(e) => props.handleDragStart(e, item)}
-                      className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+                      className="bg-white rounded-lg p-4 shadow-sm hover:border-gray-200 border-2 border-white transition-shadow my-2"
                     >
                       <img
                         src={item.imagePath}

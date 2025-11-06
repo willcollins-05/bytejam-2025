@@ -9,7 +9,7 @@ export default function SceneToolbar(props: {
   selectedScale: number;
 }) {
   return (
-    <div className="bg-white shadow-md p-4 flex gap-2 items-center">
+    <div className="bg-white shadow-md p-4 flex gap-2 items-center border-b-4 border-gray-200">
       <button
         onClick={props.rotateItem}
         disabled={!props.selectedId}
@@ -26,7 +26,7 @@ export default function SceneToolbar(props: {
         <Trash2 size={18} />
         Delete
       </button>
-      <label htmlFor="scale" className="text-gray-700">Scale: </label>
+      <label htmlFor="scale" className="font-semibold text-gray-700">Scale: </label>
       <input
         type="number"
         name="scale"
@@ -37,12 +37,12 @@ export default function SceneToolbar(props: {
         max={10}
         placeholder="Scale"
         value={props.selectedScale}
-        className="w-20 px-2 py-1 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="w-[5.5rem] px-4 py-2 border border-gray-300 rounded-lg bg-gray-400 disabled:bg-gray-300 disabled:cursor-not-allowed outline-none"
         onChange={props.updateScale}
       />
       <button
         onClick={props.clearCanvas}
-        className="ml-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+        className="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:hover:bg-red-600 transition-colors"
       >
         Clear All
       </button>
