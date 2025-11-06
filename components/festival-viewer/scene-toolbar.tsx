@@ -1,19 +1,26 @@
+import dynamic from "next/dynamic";
+import type { ChangeEvent } from "react";
 import { Trash2, RotateCw } from "lucide-react";
+
+const ThemeSwitcher = dynamic(
+  () => import("@/components/theme-switcher").then((mod) => mod.ThemeSwitcher),
+  { ssr: false }
+);
 
 export default function SceneToolbar(props: {
   rotateItem: () => void;
   selectedId: number | null;
   deleteItem: () => void;
   clearCanvas: () => void;
-  updateScale: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  updateScale: (e: ChangeEvent<HTMLInputElement>) => void;
   selectedScale: number;
 }) {
   return (
-    <div className="bg-white shadow-md p-4 flex gap-2 items-center">
+    <div className="bg-white dark:bg-gray-900 shadow-md p-4 flex gap-2 items-center border-b-4 border-gray-200 dark:border-gray-700">
       <button
         onClick={props.rotateItem}
         disabled={!props.selectedId}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
       >
         <RotateCw size={18} />
         Rotate
@@ -21,12 +28,12 @@ export default function SceneToolbar(props: {
       <button
         onClick={props.deleteItem}
         disabled={!props.selectedId}
-        className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
       >
         <Trash2 size={18} />
         Delete
       </button>
-      <label htmlFor="scale" className="text-gray-700">Scale: </label>
+      <label htmlFor="scale" className="font-semibold text-gray-700 dark:text-white">Scale: </label>
       <input
         type="number"
         name="scale"
@@ -37,15 +44,18 @@ export default function SceneToolbar(props: {
         max={10}
         placeholder="Scale"
         value={props.selectedScale}
-        className="w-20 px-2 py-1 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="w-[5.5rem] px-4 py-2 border rounded-lg bg-gray-400 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed outline-none"
         onChange={props.updateScale}
       />
       <button
         onClick={props.clearCanvas}
-        className="ml-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+        className="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
       >
         Clear All
       </button>
+      <div className="ml-2">
+        <ThemeSwitcher />
+      </div>
     </div>
   );
 }
