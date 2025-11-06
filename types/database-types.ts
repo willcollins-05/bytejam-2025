@@ -1,5 +1,5 @@
 export interface festival_props {
-    id: number;
+    id?: number;
     created_at: string;
     label: string;
     image_path: string;
@@ -9,22 +9,22 @@ export interface festival_props {
 }
 
 export interface users {
-    id: number;
+    id?: number;
     created_at: string;
     username: string;
-    email: string | null;
-    password_hash: string | null;
+    email: string;
+    password_hash: string;
     pfp_url: string | null;
 }
 
 export interface prop_groups {
-    id: number;
+    id?: number;
     created_at: string;
     group_name: string;
 }
 
 export interface placed_props {
-    id: number;
+    id?: number;
     prop_id: number;
     festival_id: number;
     created_at: string;
@@ -35,7 +35,7 @@ export interface placed_props {
 }
 
 export interface festivals {
-    id: number;
+    id?: number;
     created_at: string;
     user_id: number;
 }
