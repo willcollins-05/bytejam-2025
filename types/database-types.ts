@@ -38,4 +38,6 @@ export interface festivals {
     id?: number;
     created_at: string;
     user_id: number;
+    placed_props_json: string;
+    name: string
 }
