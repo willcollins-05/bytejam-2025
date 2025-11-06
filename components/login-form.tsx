@@ -91,17 +91,18 @@ export function LoginForm() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {isSignIn ? <h2>Sign In</h2> : <h2>Sign Up</h2>}
+    <div className="bg-white dark:bg-black p-8 rounded-lg shadow-xl  dark:border-gray-500 border-[.75px]">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {isSignIn ? <h2 className="text-center font-semibold text-[30px]">Sign In</h2> : <h2 className="text-center font-semibold text-[30px]">Sign Up</h2>}
         {errorMessage.length > 0 && (
-          <p style={{ color: "red" }}>{errorMessage}</p>
+          <p style={{ color: "red" }} className="text-center">{errorMessage}</p>
         )}
         <div>
           {!isSignIn && (
             <>
               <label htmlFor="username">Username: </label>
               <input
+            className="w-full rounded-lg px-2 dark:bg-black dark:border-white border-[.75px]"
                 type="text"
                 name="username"
                 id="username"
@@ -116,10 +117,11 @@ export function LoginForm() {
         <div>
           <label htmlFor="email">Email: </label>
           <input
+            className="w-full rounded-lg px-2 dark:bg-black dark:border-white border-[.75px]"
             type="email"
             name="email"
             id="email"
-            placeholder="Email..."
+            placeholder="example@email.com"
             autoComplete="off"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -128,6 +130,7 @@ export function LoginForm() {
         <div>
           <label htmlFor="password">Password: </label>
           <input
+            className="w-full rounded-lg px-2 dark:bg-black dark:border-white border-[.75px]"
             type="password"
             name="password"
             id="password"
@@ -137,10 +140,13 @@ export function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">{isSignIn ? "Sign In" : "Sign Up"}</button>
-        <p>
+        <div className="text-center">
+          <button className="bg-gray-200 hover:bg-gray-300 dark:bg-[rgb(33,33,33)] w-[50%] p-2 rounded-lg content-center dark:hover:bg-[rgb(76,76,76)]" type="submit">{isSignIn ? "Sign In" : "Sign Up"}</button>
+        </div>
+        
+        <p className="text-center">
           {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button type="button" onClick={() => setIsSignIn(!isSignIn)}>
+          <button className="underline" type="button" onClick={() => setIsSignIn(!isSignIn)}>
             {isSignIn ? "Sign Up" : "Sign In"}
           </button>
         </p>

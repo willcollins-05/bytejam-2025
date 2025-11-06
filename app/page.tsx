@@ -67,7 +67,7 @@ export default function Home() {
           <div className="flex justify-between h-20">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                <span className="text-3xl font-bold text-gray-900 dark:text-indigo-400">
                   ByteJam Festival Builder
                 </span>
               </Link>
