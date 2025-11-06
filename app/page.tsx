@@ -80,15 +80,15 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <main className="py-30">
+      <main className="py-30 flex justify-center items-center min-h-[80vh]">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           {/* Dashboard Header */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
             <div className="w-full md:w-1/2 flex justify-center">
               <Image
-                src="/logo.png"
-                width={800}
-                height={800}
+                src="/images/festival-logo-new.png"
+                width={600}
+                height={600}
                 alt="ByteJam Logo"
                 className="rounded-lg"
               />
