@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { users } from "@/types/database-types";
-import { hashPassword, comparePasswords } from "@/lib/auth/session";
+import { hashPassword } from "@/lib/auth/session";
 import {
   createNewUser,
   getUserByEmail,

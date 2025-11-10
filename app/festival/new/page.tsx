@@ -1,20 +1,15 @@
 import SceneBuilder from "@/components/festival-viewer/scene-builder";
-import {
-  festival_props,
-  users,
-  prop_groups,
-  placed_props,
-  festivals,
-} from "@/types/database-types";
+import { festival_props, prop_groups } from "@/types/database-types";
 import { ItemGroup } from "@/types/festival-viewer-types";
 import { getAllPropsFromGroup, getAllPropGroups } from "@/lib/supabase/queries";
-
 
 export default async function FestivalViewPage() {
   const itemGroups: ItemGroup[] = [];
   const dbGroups: prop_groups[] = await getAllPropGroups();
   for (const group of dbGroups) {
-    const propsInGroup: festival_props[] = await getAllPropsFromGroup(group.id as number);
+    const propsInGroup: festival_props[] = await getAllPropsFromGroup(
+      group.id as number
+    );
     const itemGroup: ItemGroup = {
       id: group.id as number,
       groupName: group.group_name,

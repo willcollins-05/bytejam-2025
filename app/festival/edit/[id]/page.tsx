@@ -1,10 +1,7 @@
 import SceneBuilder from "@/components/festival-viewer/scene-builder";
 import {
   festival_props,
-  users,
   prop_groups,
-  placed_props,
-  festivals,
 } from "@/types/database-types";
 import { ItemGroup } from "@/types/festival-viewer-types";
 import { getAllPropsFromGroup, getAllPropGroups } from "@/lib/supabase/queries";
