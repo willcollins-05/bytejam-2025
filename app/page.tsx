@@ -32,17 +32,17 @@ export default function Home() {
       <main className="py-30 flex justify-center items-center min-h-[80vh]">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           {/* Dashboard Header */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
+          <div className="flex flex-col items-center justify-center gap-8 mb-8">
             <div className="w-full md:w-1/2 flex justify-center">
               <Image
                 src="/images/festival-logo-new.png"
-                width={800}
-                height={800}
+                width={400}
+                height={400}
                 alt="Festival Logo"
-                className="rounded-lg"
+                className="rounded-lg mt-6"
               />
             </div>
-            <div className="w-full md:w-1/2 max-w-md">
+            <div className="w-full">
               {username === "" ? (
                 <button
                   className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold"
@@ -52,7 +52,7 @@ export default function Home() {
                 </button>
               ) : (
                 <>
-                  <h2>Welcome to the Festival Builder</h2>
+                  <h2 className={`text-3xl my-4`}>Welcome to the Festival Builder</h2>
                   <button
                     className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold"
                     onClick={(e) => toFestivalList()}
