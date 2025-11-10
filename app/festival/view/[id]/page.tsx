@@ -1,7 +1,17 @@
 import SceneViewer from "@/components/festival-viewer/scene-viewer";
-import { festival_props, prop_groups } from "@/types/database-types";
+import {
+  festival_props,
+  prop_groups,
+  festivals,
+  users,
+} from "@/types/database-types";
 import { ItemGroup } from "@/types/festival-viewer-types";
-import { getAllPropsFromGroup, getAllPropGroups } from "@/lib/supabase/queries";
+import {
+  getAllPropsFromGroup,
+  getAllPropGroups,
+  getFestivalById,
+  getUserById,
+} from "@/lib/supabase/queries";
 import { Providers } from "@/components/providers";
 
 export default async function FestivalViewPage({
@@ -11,6 +21,7 @@ export default async function FestivalViewPage({
 }) {
   const itemGroups: ItemGroup[] = [];
   const dbGroups: prop_groups[] = await getAllPropGroups();
+
   for (const group of dbGroups) {
     const propsInGroup: festival_props[] = await getAllPropsFromGroup(
       group.id as number
@@ -31,9 +42,21 @@ export default async function FestivalViewPage({
 
   const { id } = await params;
 
+  const festival: festivals = await getFestivalById(Number(id));
+  const user: users = await getUserById(festival.user_id);
+
+  const festivalName = festival.name;
+  const username = user.username;
+
   return (
     <Providers>
-      <SceneViewer itemGroups={itemGroups} isNew={false} id={Number(id)} />
+      <SceneViewer
+        itemGroups={itemGroups}
+        isNew={false}
+        id={Number(id)}
+        festivalName={festivalName}
+        username={username}
+      />
     </Providers>
   );
 }
