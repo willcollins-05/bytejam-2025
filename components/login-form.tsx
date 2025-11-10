@@ -41,7 +41,7 @@ export function LoginForm() {
         if (result?.error) {
           addErrorMessage('Invalid email or password.');
         } else {
-          router.push('/festival/new');
+          router.push('/');
           router.refresh();
         }
       } catch (error) {
@@ -80,7 +80,7 @@ export function LoginForm() {
         if (result?.error) {
           addErrorMessage('Invalid email or password.');
         } else {
-          router.push('/festival/new');
+          router.push('/');
           router.refresh();
         }
       } catch (error) {

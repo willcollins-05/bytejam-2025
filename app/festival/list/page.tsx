@@ -3,11 +3,28 @@ import { useEffect, useState } from "react";
 import { getAllFestivals, getAllUsers } from "@/lib/supabase/queries";
 import { festivalsWithUsers } from "@/types/database-types";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import LogoutButton from "@/components/logout-button";
 
 // Main Page Component
 export default function UserListPage() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [festivals, setFestivals] = useState<festivalsWithUsers[]>([]);
+  const [userId, setUserId] = useState<number>();
+  const [error, setError] = useState<string>("");
+
+  const addErrorMessage = (message: string) => {
+    setError(message);
+    setTimeout(() => {
+      setError('');
+    }, 5000)
+  }
+
+  useEffect(() => {
+    setUserId((session?.user.id || -1) as number);
+  }, [session, status]);
+
   useEffect(() => {
     const getAllFestivalsFromDB = async () => {
       const festivalsFromDB = await getAllFestivals();
@@ -30,8 +47,8 @@ export default function UserListPage() {
     getAllFestivalsFromDB();
   }, []);
 
-  const handleNewFestival = (e: any) => {
-    router.push("/festival/new");
+  const handleEditFestival = (e: any, id: number) => {
+    router.push(`/festival/edit/${id}`);
     router.refresh();
   };
 
@@ -40,22 +57,14 @@ export default function UserListPage() {
     router.refresh();
   };
 
+  const handleShowMore = (e: any) => {
+    addErrorMessage('No more festivals to show.')
+  };
+
   return (
     <div className={`min-h-screen 'dark:bg-gray-900' 'bg-gray-50'`}>
       {/* Header */}
-      <header
-        className={`border-b-2 p-6 flex items-center justify-between dark:bg-gray-900 dark:border-gray-700 bg-white border-gray-300`}
-      >
-        <h1 className={`text-3xl font-bold dark:text-gray-900 text-white`}>
-          LOGO
-        </h1>
-        <button
-          onClick={(e) => handleNewFestival(e)}
-          className={`px-6 py-2 rounded font-medium dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600 bg-gray-600 text-white hover:bg-gray-700`}
-        >
-          New Festival
-        </button>
-      </header>
+      
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -76,20 +85,37 @@ export default function UserListPage() {
                   @{festival.username}
                 </span>
               </div>
-              <button
-                className={`px-8 py-2 rounded font-medium bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
-                onClick={(e) => handleViewFestival(e, festival.id as number)}
-              >
-                View
-              </button>
+              <div>
+                {festival.user_id == userId && (
+                  <button
+                    className={`mx-6 px-8 py-2 rounded font-medium bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
+                    onClick={(e) =>
+                      handleEditFestival(e, festival.id as number)
+                    }
+                  >
+                    Edit
+                  </button>
+                )}
+                <button
+                  className={`px-8 py-2 rounded font-medium bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
+                  onClick={(e) => handleViewFestival(e, festival.id as number)}
+                >
+                  View
+                </button>
+              </div>
             </div>
           ))}
         </div>
+
+        {error.length > 0 && (
+          <p style={{ color: "red" }} className="text-center">{error}</p>
+        )}
 
         {/* Show More Button */}
         <div className="flex justify-center">
           <button
             className={`px-10 py-3 rounded font-medium text-lg bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`}
+            onClick={(e) => handleShowMore(e)}
           >
             Show More
           </button>
