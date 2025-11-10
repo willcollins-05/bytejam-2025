@@ -70,19 +70,8 @@ export function LoginForm() {
         };
 
         await createNewUser(newUser);
-
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          addErrorMessage('Invalid email or password.');
-        } else {
-          router.push('/');
-          router.refresh();
-        }
+        
+        setIsSignIn(true);
       } catch (error) {
         addErrorMessage("Error creating user.");
         console.log(error);
