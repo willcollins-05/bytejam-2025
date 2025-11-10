@@ -1,3 +1,4 @@
+"use client";
 // import { DeployButton } from "@/components/deploy-button";
 // import { EnvVarWarning } from "@/components/env-var-warning";
 // import { AuthButton } from "@/components/auth-button";
@@ -50,33 +51,35 @@
 //   );
 // }
 
-
-
-
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    setUsername(session?.user.username || "");
+  }, [session, status]);
+
+  const toLoginPage = () => {
+    router.push("/auth/login");
+    router.refresh();
+  };
+
+  const toFestivalList = () => {
+    router.push("/festival/list");
+    router.refresh();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Navigation */}
-      <nav className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between h-20">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-3xl font-bold text-gray-900 dark:text-indigo-400">
-                  ByteJam Festival Builder
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-6">
-              <ThemeSwitcher />
-            </div>
-          </div>
-        </div>
-      </nav>
+      
 
       {/* Main Content */}
       <main className="py-30 flex justify-center items-center min-h-[80vh]">
@@ -93,11 +96,23 @@ export default function Home() {
               />
             </div>
             <div className="w-full md:w-1/2 max-w-md">
-            <Link href="auth\login">
-                <button className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold" >
+              {username === "" ? (
+                <button
+                  className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold"
+                  onClick={(e) => toLoginPage()}
+                >
                   Sign Up/Login
                 </button>
-            </Link>
+              ) : (
+                <>
+                  <h2>Welcome to the Festival Builder</h2>
+                  <button className="p-[100px] bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg mb-6 w-full font-semibold"
+                    onClick={(e) => toFestivalList()}
+                  >
+                    View Festivals
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -105,5 +120,3 @@ export default function Home() {
     </div>
   );
 }
-
-

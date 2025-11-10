@@ -18,8 +18,11 @@ export default function SceneToolbar(props: {
   handleOnSave: (e: any) => void;
   setFestivalName: (e: any) => void;
   festivalName: string
+  handleOnScaleBlur: (e: any) => void;
 }) {
   const { data: session, status } = useSession();
+
+
 
   return (
     <div className="bg-white dark:bg-gray-900 shadow-md p-4 flex gap-2 items-center border-b-4 border-gray-200 dark:border-gray-700">
@@ -57,6 +60,7 @@ export default function SceneToolbar(props: {
         value={props.selectedScale}
         className="w-[5.5rem] px-4 py-2 border rounded-lg bg-gray-400 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed outline-none"
         onChange={props.updateScale}
+        onBlur={props.handleOnScaleBlur}
       />
       <button
         className="ml-auto p-2 rounded-md bg-green-500 hover:bg-green-600 transition-colors"
@@ -82,9 +86,6 @@ export default function SceneToolbar(props: {
       >
         Clear All
       </button>
-      <div className="ml-2">
-        <ThemeSwitcher />
-      </div>
     </div>
   );
 }

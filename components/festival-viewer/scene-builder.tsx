@@ -9,7 +9,7 @@ import {
 import {
   createNewFestival,
   updateFestivalPlacedProps,
-  getFestivalById
+  getFestivalById,
 } from "@/lib/supabase/queries";
 import { useSession } from "next-auth/react";
 
@@ -43,22 +43,19 @@ export default function SceneBuilder(props: {
   if (!isLoggedIn && session?.user.id !== null && status === "authenticated") {
     setIsLoggedIn(true);
   }
- 
+
   useEffect(() => {
     const loadFestivalById = async () => {
-      const festivalData = await getFestivalById(props.id)
+      const festivalData = await getFestivalById(props.id);
       setFestivalName(festivalData.name);
       console.log(festivalData);
       setCanvasItems(festivalData.placed_props_json);
-    }
+    };
 
     if (props.id !== -1 && props.id !== null) {
-      loadFestivalById()
+      loadFestivalById();
     }
-    
-  }, [])
-
- 
+  }, []);
 
   // Will be changed to the Supabase database once set up
   const groups: ItemGroup[] = props.itemGroups;
@@ -181,6 +178,14 @@ export default function SceneBuilder(props: {
   };
 
   const updateScale = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCanvasItems((prev) =>
+      prev.map((item) =>
+        item.uniqueId === selectedId ? { ...item, scale: (e.target.value || 1) as number } : item
+      )
+    );
+  };
+
+  const handleOnScaleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     let newScale = parseFloat(e.target.value);
     if (selectedId && !isNaN(newScale) && newScale > 0) {
       if (newScale > 10) {
@@ -200,8 +205,6 @@ export default function SceneBuilder(props: {
   const toggleGroup = (groupId: number) => {
     setExpandedGroup(expandedGroup === groupId ? null : groupId);
   };
-
-
 
   if (!isLoggedIn) {
     return <h1>You must log in to continue</h1>;
@@ -234,6 +237,7 @@ export default function SceneBuilder(props: {
           handleOnSave={handleOnSave}
           setFestivalName={setFestivalName}
           festivalName={festivalName}
+          handleOnScaleBlur={handleOnScaleBlur}
         />
 
         <SceneCanvas
