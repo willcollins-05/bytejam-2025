@@ -59,10 +59,11 @@ export default function SceneToolbar(props: {
         onBlur={props.handleOnScaleBlur}
       />
       <button
-        className="ml-auto p-2 rounded-md bg-green-500 hover:bg-green-600 transition-colors"
+        className="ml-auto p-2 flex flex-row rounded-md text-white bg-green-500 hover:bg-green-600 transition-colors"
         onClick={props.handleOnSave}
       >
         <Save className="" />
+        Save
       </button>
 
       <input

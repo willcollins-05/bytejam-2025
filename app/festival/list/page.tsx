@@ -71,7 +71,7 @@ export default function UserListPage() {
           {festivals.map((festival) => (
             <div
               key={festival.id}
-              className={`p-6 flex items-center justify-between dark:bg-gray-800 dark:border-gray-700 bg-white border-gray-300`}
+              className={`p-6 flex items-center justify-between dark:bg-gray-800 dark:border-gray-700 bg-white border`}
             >
               <div className="flex items-center gap-6">
                 <span
@@ -86,7 +86,7 @@ export default function UserListPage() {
               <div>
                 {festival.user_id == userId && (
                   <button
-                    className={`mx-6 px-8 py-2 rounded font-medium bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
+                    className={`mx-6 px-8 py-2 rounded-md font-medium bg-green-500 text-white hover:bg-green-600`}
                     onClick={(e) =>
                       handleEditFestival(e, festival.id as number)
                     }
@@ -95,7 +95,7 @@ export default function UserListPage() {
                   </button>
                 )}
                 <button
-                  className={`px-8 py-2 rounded font-medium bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600`}
+                  className={`px-8 py-2 rounded-md font-medium bg-blue-500 text-white hover:bg-blue-600 `}
                   onClick={(e) => handleViewFestival(e, festival.id as number)}
                 >
                   View
@@ -114,7 +114,7 @@ export default function UserListPage() {
         {/* Show More Button */}
         <div className="flex justify-center">
           <button
-            className={`px-10 py-3 rounded font-medium text-lg bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`}
+            className={`px-10 py-3 rounded-md font-medium text-lg bg-black text-white  dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`}
             onClick={(e) => handleShowMore(e)}
           >
             Show More
