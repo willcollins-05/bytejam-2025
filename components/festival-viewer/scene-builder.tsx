@@ -132,7 +132,10 @@ export default function SceneBuilder(props: {
     e.stopPropagation();
     setSelectedId(item.uniqueId);
 
-    const rect = e.currentTarget.parentElement.getBoundingClientRect();
+    const parentElement = e.currentTarget.parentElement;
+    if (!parentElement) return;
+
+    const rect = parentElement.getBoundingClientRect();
     const offsetX = e.clientX - rect.left - item.x;
     const offsetY = e.clientY - rect.top - item.y;
 
