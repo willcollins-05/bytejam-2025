@@ -12,6 +12,8 @@ export default function SceneBuilder(props: {
   itemGroups: ItemGroup[];
   isNew: boolean;
   id: number;
+  festivalName: string;
+  username: string;
 }) {
   const { data: session, status } = useSession();
 
@@ -45,7 +47,10 @@ export default function SceneBuilder(props: {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <AccountSidebarView />
+      <AccountSidebarView
+        username={props.username}
+        festivalName={props.festivalName}
+      />
 
       {/* Main Canvas Area */}
       <div className="flex-1 flex flex-col">
