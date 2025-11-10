@@ -48,8 +48,13 @@ export default function SceneBuilder(props: {
     const loadFestivalById = async () => {
       const festivalData = await getFestivalById(props.id);
       setFestivalName(festivalData.name);
-      console.log(festivalData);
-      setCanvasItems(festivalData.placed_props_json);
+
+      const placedProps =
+        typeof festivalData.placed_props_json === "string"
+          ? JSON.parse(festivalData.placed_props_json)
+          : festivalData.placed_props_json;
+
+      setCanvasItems(placedProps);
     };
 
     if (props.id !== -1 && props.id !== null) {
@@ -127,7 +132,10 @@ export default function SceneBuilder(props: {
     e.stopPropagation();
     setSelectedId(item.uniqueId);
 
-    const rect = e.currentTarget.parentElement.getBoundingClientRect();
+    const parentElement = e.currentTarget.parentElement;
+    if (!parentElement) return;
+
+    const rect = parentElement.getBoundingClientRect();
     const offsetX = e.clientX - rect.left - item.x;
     const offsetY = e.clientY - rect.top - item.y;
 
@@ -180,7 +188,9 @@ export default function SceneBuilder(props: {
   const updateScale = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCanvasItems((prev) =>
       prev.map((item) =>
-        item.uniqueId === selectedId ? { ...item, scale: (e.target.value || 1) as number } : item
+        item.uniqueId === selectedId
+          ? { ...item, scale: (e.target.value || 1) as number }
+          : item
       )
     );
   };

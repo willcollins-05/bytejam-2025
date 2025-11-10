@@ -17,13 +17,9 @@ export default function SceneToolbar(props: {
   selectedScale: number;
   handleOnSave: (e: any) => void;
   setFestivalName: (e: any) => void;
-  festivalName: string
+  festivalName: string;
   handleOnScaleBlur: (e: any) => void;
 }) {
-  const { data: session, status } = useSession();
-
-
-
   return (
     <div className="bg-white dark:bg-gray-900 shadow-md p-4 flex gap-2 items-center border-b-4 border-gray-200 dark:border-gray-700">
       <button
@@ -73,10 +69,10 @@ export default function SceneToolbar(props: {
         type="text"
         name="name"
         id="name"
-        placeholder='Festival Name...'
+        placeholder="Festival Name..."
         className="w-64 px-4 py-2 border rounded-lg bg-gray-100 outline-none text-gray-900"
-        autoComplete='off'
-        onChange={e => props.setFestivalName(e.target.value)}
+        autoComplete="off"
+        onChange={(e) => props.setFestivalName(e.target.value)}
         value={props.festivalName}
       />
 

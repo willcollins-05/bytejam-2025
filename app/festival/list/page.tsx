@@ -4,7 +4,6 @@ import { getAllFestivals, getAllUsers } from "@/lib/supabase/queries";
 import { festivalsWithUsers } from "@/types/database-types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import LogoutButton from "@/components/logout-button";
 
 // Main Page Component
 export default function UserListPage() {
@@ -17,9 +16,9 @@ export default function UserListPage() {
   const addErrorMessage = (message: string) => {
     setError(message);
     setTimeout(() => {
-      setError('');
-    }, 5000)
-  }
+      setError("");
+    }, 5000);
+  };
 
   useEffect(() => {
     setUserId((session?.user.id || -1) as number);
@@ -58,13 +57,12 @@ export default function UserListPage() {
   };
 
   const handleShowMore = (e: any) => {
-    addErrorMessage('No more festivals to show.')
+    addErrorMessage("No more festivals to show.");
   };
 
   return (
     <div className={`min-h-screen 'dark:bg-gray-900' 'bg-gray-50'`}>
       {/* Header */}
-      
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -108,7 +106,9 @@ export default function UserListPage() {
         </div>
 
         {error.length > 0 && (
-          <p style={{ color: "red" }} className="text-center">{error}</p>
+          <p style={{ color: "red" }} className="text-center">
+            {error}
+          </p>
         )}
 
         {/* Show More Button */}

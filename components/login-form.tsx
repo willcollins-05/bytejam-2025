@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { users } from "@/types/database-types";
-import { hashPassword, comparePasswords } from "@/lib/auth/session";
+import { hashPassword } from "@/lib/auth/session";
 import {
   createNewUser,
   getUserByEmail,
@@ -70,19 +70,8 @@ export function LoginForm() {
         };
 
         await createNewUser(newUser);
-
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          addErrorMessage('Invalid email or password.');
-        } else {
-          router.push('/');
-          router.refresh();
-        }
+        
+        setIsSignIn(true);
       } catch (error) {
         addErrorMessage("Error creating user.");
         console.log(error);

@@ -5,9 +5,8 @@ import {
   festivals,
   festival_props,
   prop_groups,
-  placed_props,
 } from "@/types/database-types";
-import { ItemGroup, CanvasItems } from "@/types/festival-viewer-types";
+import { CanvasItems } from "@/types/festival-viewer-types";
 
 async function getAuthenticatedClient() {
   const supabase = await createClient();
@@ -150,7 +149,7 @@ export const getAllUsers = async () => {
   );
 
   return users;
-}
+};
 
 export const getAllProps = async () => {
   const supabase = await getAuthenticatedClient();
@@ -260,7 +259,7 @@ export const getFestivalById = async (id: number) => {
     .limit(1);
 
   if (error) {
-    console.log(error)
+    console.log(error);
     throw new Error("Error fetching all festivals: ");
   }
 
@@ -296,7 +295,7 @@ export const getFestivalsByUserId = async (user_id: number) => {
         created_at: festival.created_at,
         user_id: festival.user_id,
         placed_props_json: festival.placed_props,
-        name: festival.name
+        name: festival.name,
       });
     });
   }
